@@ -7,3 +7,5 @@ annotationTools/scribble/segment.cgi
 annotationTools/scribble/image.jpg
 annotationTools/scribble/mask.png
 annotationTools/scribble/scribble.png
+.DS_Store
+.vscode/

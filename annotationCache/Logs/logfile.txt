@@ -223,3 +223,8 @@
 05-Jun-2012 16:40:16 127.0.0.1 *start_loading
 05-Jun-2012 16:40:16 127.0.0.1 *Browser_Information Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.53 Safari/536.5
 05-Jun-2012 16:40:16 127.0.0.1 *done_loading_Images/example_folder/img3.jpg
+21-Oct-2019 08:06:30 172.17.0.1 *Browser_Information Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36
+21-Oct-2019 08:06:30 172.17.0.1 *start_loading
+21-Oct-2019 08:06:31 172.17.0.1 *Browser_Information Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36
+21-Oct-2019 08:06:31 172.17.0.1 *start_loading
+21-Oct-2019 08:06:31 172.17.0.1 *done_loading_Images/example_folder/img2.jpg
