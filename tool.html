@@ -22,7 +22,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE,NO-STORE,MUST-REVALIDATE" />
 <META HTTP-EQUIV="imagetoolbar" CONTENT="no" />
 <link rel="shortcut icon" href="Icons/favicon16.ico" />
-
 <script type="text/javascript">
 // <![CDATA[
 <!--#include virtual="./annotationTools/js/jquery-1.9.1.js" -->
@@ -51,6 +50,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 <!--#include virtual="./annotationTools/js/adjust_event.js" -->
 <!--#include virtual="./annotationTools/js/scribble.js" -->
 <!--#include virtual="./annotationTools/js/xml_accessors.js" -->
+<!--#include virtual="./annotationTools/js/jstree.min.js" -->
 // ]]>
 </script>
 <style>
@@ -60,6 +60,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 @import url("annotationTools/css/object_list.css?version=4");
 @import url("annotationTools/css/scribblemenu.css?version=4");
 @import url("annotationTools/css/jquery-ui.css");
+@import url("annotationTools/css/jstree_style/style.min.css");
 </style>
 
 </head>
@@ -74,20 +75,20 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   <div class="header" id="header">
     <!-- LOGO-->
     <div id="logo">
-      <a href="index.html"><img src="Icons/LabelMe_logo3.png" width="216" height="69" alt="LabelMe logo"></img></a>
+      <a href="#"><img src="Icons/LabelMe_logo3.png" width="216" height="69" alt="LabelMe logo"></img></a>
     </div>
     
     <!-- USERNAME FORM-->
     <div id="username_main_div">
       <div id="display_user" style="display:block;">
-        You are:
-        <b><span id="usernametxt" type="text" style="max-width:120px; height:1.2em;" tabindex="0" title="This username will get associated to each new polygon inside the XML.">anonymous
+        你是:
+        <b><span id="usernametxt" type="text" style="max-width:120px; height:1.2em;" tabindex="0" title="这个用户名将与每个标注的图片相关联">匿名
         </span></b>
-        <font size="-2">(<a href="#" id="changeuser" title="Click to change the username">change user</a>)</font>
+        <font size="-2">(<a href="#" id="changeuser" title="Click to change the username">更改用户名</a>)</font>
       </div>
       <div id="enterUserName" style="display:none;">
-        Enter name:
-        <input id="userEnter" type="text" style="width:120px;" tabindex="0" value="" title="Enter the object\'s name here. Avoid application specific names, codes, long descriptions. Use a name you think other people would agree in using." />
+        输入用户名：
+        <input id="userEnter" type="text" style="width:120px;" tabindex="0" value="" title="在此输入用户名，请勿输入特殊符号" />
       </div>
     </div>
   </div>
@@ -126,6 +127,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       </button>
       <button id="moreContrast" class="labelBtn" type="button" title="调高亮度">
         <img src="Icons/lesscontrast.png" height="30" />
+      </button>
+      <button id="transImg" class="labelBtn" type="button" title="图片格式转换">
+        <img src="Icons/trans_icon.png" height="30" />
       </button>
     </div>
     
@@ -194,7 +198,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   <div id="anno_anchor"></div>
   
   <!-- DIV for Mechanical Turk feedback form -->
-  <div id="mt_feedback" style="position:absolute;bottom:4px;" />
-
+  <div id="mt_feedback" style="position:absolute;bottom:4px;"></div>
+  <div style="position:absolute; top:300px; right: 5px;width:200px;height:400px; overflow: auto;">
+      <div id="filetree" style="font-size: small;"></div>
+  </div>
 </body>
 </html>

@@ -22,13 +22,12 @@ function StartupLabelMe() {
     // Initialize global variables:
     main_handler = new handler();
     main_canvas = new canvas('myCanvas_bg');
-    main_media = new image('imcanvas');
+    main_media = new image('imcanvas');//创建新的图像类，参见image.js
     // Parse the input URL.  Returns false if the URL does not set the 
     // annotation folder or image filename.  If false is returned, the 
     // function fetches a new image and sets the URL to reflect the 
     // fetched image.
     if(!main_media.GetFileInfo().ParseURL()) return;
-
     if(video_mode) {
       $('#generic_buttons').remove();
       $.getScript("annotationTools/js/video.js", function(){
@@ -53,14 +52,35 @@ function StartupLabelMe() {
           // Set the image dimensions:
           console.log('Imageloaded')
           main_media.SetImageDimensions();
-              
           // Read the XML annotation file:
           var anno_file = main_media.GetFileInfo().GetFullName();
           anno_file = 'Annotations/' + anno_file.substr(0,anno_file.length-4) + '.xml' + '?' + Math.random();
           ReadXML(anno_file,LoadAnnotationSuccess,LoadAnnotation404);
           main_media.GetFileInfo().PreFetchImage();
-
           $("#imcanvas").show();
+
+          //显示文件列表
+          $('#filetree').jstree({
+            'core': {
+                'data': function(obj, callback){
+                  var str;
+                  $.ajax({
+                    type: "POST",
+                    url:"annotationTools/perl/fetch_files_url.cgi",
+                    async: false,
+                    success:function(result) {
+                      console.log("获取文件夹列表成功");
+                      str = result;
+                    }
+                  });
+                  jsonstr = JSON.parse(str);
+                  callback.call(this, jsonstr);
+                }
+            }
+        }).bind("select_node.jstree", function (e, data) {
+            var href = data.node.a_attr.href
+            document.location.href = href;
+        });;
       };
 
       // Get the image:
@@ -235,6 +255,7 @@ function FinishStartup() {
   $('#changeuser').attr("onclick","javascript:show_enterUserNameDIV(); return false;");
   $('#userEnter').attr("onkeyup","javascript:var c; if(event.keyCode)c=event.keyCode; if(event.which)c=event.which; if(c==13 || c==27) changeAndDisplayUserName(c);");
   $('#xml_url').attr("onclick","javascript:GetXMLFile();");
+  $('#transImg').attr("onclick","javascript:transImg();");
   $('#prevImage').attr("onclick","javascript:ShowPrevImage()");
   $('#nextImage').attr("onclick","javascript:ShowNextImage()");
   $('#lessContrast').attr("onclick","javascript:main_media.AugmentContrast()");

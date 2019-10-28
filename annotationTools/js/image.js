@@ -43,7 +43,6 @@ function image(id) {
         if(IsMicrosoft()) this.im.style.visibility = 'hidden';
         else this.im.style.display = 'none';
         this.image =  new Image();
-        
         this.image.src  =  this.file_info.GetImagePath();
         this.image.onload = function (){
             onload_helper();

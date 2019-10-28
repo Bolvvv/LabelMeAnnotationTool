@@ -346,3 +346,17 @@ function GetXMLFile() {
   }
 }
 
+function transImg(){
+  console.log("发起请求")
+  $.ajax({
+    type: "POST",
+    url:"annotationTools/perl/trans_ima.cgi",
+    async: false,
+    success:function(result) {
+      console.log("数据格式转换成功");
+      alert("数据格式转换成功")
+    }
+  });
+  console.log("产生请求")
+}
+

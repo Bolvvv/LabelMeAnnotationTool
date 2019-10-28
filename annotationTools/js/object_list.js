@@ -33,22 +33,22 @@ function RenderObjectList() {
   
   // Create DIV
   if (showImgName) {html_str += '<p><b>Image name: '+ imgName +'</b></p>';}
-  html_str += '<b>Polygons in this image ('+ NundeletedPolygons +')</b>';
+  html_str += '<b>本张图片的多边形 ('+ NundeletedPolygons +')</b>';
   html_str += '<p style="font-size:10px;line-height:100%"><a ' +
   'onmouseover="main_canvas.ShadePolygons();" ' +
-  'onmouseout="main_canvas.RenderAnnotations();"> Reveal unlabeled pixels </a></p>';
+  'onmouseout="main_canvas.RenderAnnotations();"> 显示未标注的图形 </a></p>';
   // Create "hide all" button:
   if(IsHidingAllPolygons) {
-    html_str += '<p style="font-size:10px;line-height:100%"><a id="show_all_button" href="javascript:ShowAllPolygons();">Show all polygons</a></p>';
+    html_str += '<p style="font-size:10px;line-height:100%"><a id="show_all_button" href="javascript:ShowAllPolygons();">展示所有多边形</a></p>';
   }
   else {
     IsHidingAllPolygons = false;
-    html_str += '<p style="font-size:10px;line-height:100%"><a id="hide_all_button" href="javascript:HideAllPolygons();">Hide all polygons</a></p>';
+    html_str += '<p style="font-size:10px;line-height:100%"><a id="hide_all_button" href="javascript:HideAllPolygons();">隐藏所有多边形</a></p>';
   }
 
   // Add parts-of drag-and-drop functionality:
   if(use_parts) {
-    html_str += '<p style="font-size:10px;line-height:100%" ondrop="drop(event, -1)" ondragenter="return dragEnter(event)" ondragover="return dragOver(event)">Drag a tag on top of another one to create a part-of relationship.</p>';
+    html_str += '<p style="font-size:10px;line-height:100%" ondrop="drop(event, -1)" ondragenter="return dragEnter(event)" ondragover="return dragOver(event)">将标签拖到另一个标签上以创建部分关系。</p>';
   }
   html_str += '<ol>';
   
@@ -113,7 +113,7 @@ function RenderObjectList() {
 
       var obj_name = LMgetObjectField(LM_xml,ii,'name');
       if(obj_name.length==0 && !draw_anno) {
-	html_str += '<i>[ Please enter name ]</i>';
+	html_str += '<i>[ 请输入名字 ]</i>';
       }
       else {
 	html_str += obj_name;
@@ -180,7 +180,7 @@ function HideAllPolygons() {
     }
     
     // Create "show all" button:
-    $('#hide_all_button').replaceWith('<a id="show_all_button" href="javascript:ShowAllPolygons();">Show all polygons</a>');
+    $('#hide_all_button').replaceWith('<a id="show_all_button" href="javascript:ShowAllPolygons();">显示所有多边形</a>');
   }
   else {
     alert('Close edit popup bubble first');
@@ -196,7 +196,7 @@ function ShowAllPolygons() {
   main_canvas.RenderAnnotations();
 
   // Create "hide all" button:
-  $('#show_all_button').replaceWith('<a id="hide_all_button" href="javascript:HideAllPolygons();">Hide all polygons</a>');
+  $('#show_all_button').replaceWith('<a id="hide_all_button" href="javascript:HideAllPolygons();">隐藏所有多边形</a>');
 }
 
 // *******************************************
