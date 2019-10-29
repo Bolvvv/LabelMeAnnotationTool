@@ -55,6 +55,8 @@ function StartupLabelMe() {
           // Read the XML annotation file:
           var anno_file = main_media.GetFileInfo().GetFullName();
           anno_file = 'Annotations/' + anno_file.substr(0,anno_file.length-4) + '.xml' + '?' + Math.random();
+          console.log(anno_file);
+          console.log("读取文件");
           ReadXML(anno_file,LoadAnnotationSuccess,LoadAnnotation404);
           main_media.GetFileInfo().PreFetchImage();
           $("#imcanvas").show();

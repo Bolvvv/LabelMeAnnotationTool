@@ -9,5 +9,8 @@ annotationTools/scribble/mask.png
 annotationTools/scribble/scribble.png
 Images/*
 SourceImages/*
+Annotations/*
+annotationCache/TmpAnnotations/*
 .DS_Store
 .vscode/
+annotationCache/Logs/*
