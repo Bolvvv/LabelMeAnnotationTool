@@ -63,7 +63,7 @@ function handler() {
       
       // object name
       old_name = LMgetObjectField(LM_xml,anno.anno_id,'name');
-      if(document.getElementById('objEnter')) new_name = RemoveSpecialChars(document.getElementById('objEnter').value);
+      if($("input[name='objEnter']:checked").val()) new_name = RemoveSpecialChars($("input[name='objEnter']:checked").val());
       else new_name = RemoveSpecialChars(adjust_objEnter);
       
       var re = /[a-zA-Z0-9]/;
@@ -258,7 +258,8 @@ function handler() {
 	}
       }
       else {
-	nn = RemoveSpecialChars(document.getElementById('objEnter').value);
+  // nn = RemoveSpecialChars(document.getElementById('objEnter').value);
+  nn = RemoveSpecialChars($("input[name='objEnter']:checked").val());
 	var re = /[a-zA-Z0-9]/;
 	if(!re.test(nn)) {
 	   alert('Please enter an object name');

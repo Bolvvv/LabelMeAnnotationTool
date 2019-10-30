@@ -205,7 +205,6 @@ function GetPopupFormDraw(scribble_form) {
     part_bubble = true;
   }
   html_str += HTMLobjectBox("");
-  
   if(use_attributes) {
     html_str += HTMLoccludedBox("");
     html_str += "<b>Enter attributes</b><br />";
@@ -291,9 +290,22 @@ function GetPopupFormEdit(anno) {
 // Shows the box to enter the object name
 function HTMLobjectBox(obj_name) {
   var html_str="";
+
+  //标签名称
+
+  objEnter1 = "脑膜瘤";//默认项
+  objEnter2 = "胶质瘤";
   
-  html_str += '<input name="objEnter" id="objEnter" type="text" style="width:220px;" tabindex="0" value="'+obj_name+'" title="Enter the object\'s name here. Avoid application specific names, codes, long descriptions. Use a name you think other people would agree in using. "';
-  
+  // html_str += '<input name="objEnter" id="objEnter" type="text" style="width:220px;" tabindex="0" value="'+obj_name+'" title="Enter the object\'s name here. Avoid application specific names, codes, long descriptions. Use a name you think other people would agree in using. "';
+  html_str += '<input name="objEnter" id="objEnter1" type="radio" value="Meningioma" ';
+  if(obj_name === objEnter1 || obj_name !== objEnter2) {
+    html_str += ' checked="checked" ';
+  }
+  html_str += '/>'+objEnter1;
+  html_str += '<input name="objEnter" id="objEnter2" type="radio" value="Glioma" ';
+  if(obj_name === objEnter2) {
+    html_str += ' checked="checked" ';
+  }
   html_str += ' onkeyup="var c;if(event.keyCode)c=event.keyCode;if(event.which)c=event.which;if(c==13){';
   //html_str += 'console.log($(".ui-autocomplete.ui-widget:visible").length);';
   // if obj_name is empty it means that the box is being created
@@ -310,7 +322,7 @@ function HTMLobjectBox(obj_name) {
   
   // if there is a list of objects, we need to habilitate the list
   if(object_choices=='...') {
-    html_str += '/>'; // close <input
+    html_str += '/> '+objEnter2; // close <input
   }
   else {
     html_str += 'list="datalist1" />'; // insert list and close <input
