@@ -54,13 +54,14 @@ function StartupLabelMe() {
           main_media.SetImageDimensions();
           // Read the XML annotation file:
           var anno_file = main_media.GetFileInfo().GetFullName();
+          var file_url = anno_file;
           anno_file = 'Annotations/' + anno_file.substr(0,anno_file.length-4) + '.xml' + '?' + Math.random();
           console.log(anno_file);
           console.log("读取文件");
           ReadXML(anno_file,LoadAnnotationSuccess,LoadAnnotation404);
           main_media.GetFileInfo().PreFetchImage();
           $("#imcanvas").show();
-
+          $("#current_img_url").text(file_url);
           //显示文件列表
           $('#filetree').jstree({
             'core': {

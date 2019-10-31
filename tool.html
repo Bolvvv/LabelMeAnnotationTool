@@ -73,10 +73,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   
   <!-- HEADER AND LOGO -->  
   <div class="header" id="header">
-    <!-- LOGO-->
-    <div id="logo">
-      <a href="#"><img src="Icons/LabelMe_logo3.png" width="216" height="69" alt="LabelMe logo"></img></a>
-    </div>
     
     <!-- USERNAME FORM-->
     <div id="username_main_div">
@@ -96,7 +92,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   <!-- BUTTONS -->
   <div id="tool_buttons">
     <!-- NAVIGATION BUTTONS  -->
-    <div id="label_buttons_navigation">
+    <div id="label_buttons_navigation" style="left: 0;">
       <!-- DOWNLOAD IMAGE BUTTON -->
       <button id="img_url" class="labelBtn" type="button" title="下载图片">
         <img src="Icons/download_img.png"  height="30" />
@@ -120,7 +116,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         <img src="Icons/next_2.png" height="30" />
       </button>
     </div>
-    <div id="label_buttons_contrast">
+    <div id="label_buttons_navigation" style="left: 300px;">
 
       <button id="lessContrast" class="labelBtn" type="button" title="调低亮度">
         <img src="Icons/morecontrast.png" height="30" />
@@ -131,8 +127,16 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       <button id="transImg" class="labelBtn" type="button" title="图片格式转换">
         <img src="Icons/trans_icon.png" height="30" />
       </button>
+      <button id="show_img_url" class="labelBtn" type="button" title="显示图片列表">
+        <img src="Icons/show_img_url.png" height="30" />
+      </button>
     </div>
-    
+    <!-- 此图片所在当前目录 -->
+    <div id="label_buttons_contrast" style="position: absolute; left: 700px; top: 13px;">
+      <div style="width:500px;height: 20px;overflow:auto;white-space: nowrap;">
+        <span id="current_img_url">123</span>
+      </div>
+    </div>
     <!-- DRAWING BUTTONS -->
     <div id="label_buttons_drawing">
       <div id ="generic_buttons" class="annotatemenu">
@@ -202,5 +206,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   <div style="position:absolute; top:300px; right: 5px;width:200px;height:400px; overflow: auto;">
       <div id="filetree" style="font-size: small;"></div>
   </div>
+
 </body>
 </html>

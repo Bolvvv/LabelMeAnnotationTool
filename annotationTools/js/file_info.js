@@ -357,7 +357,9 @@ function file_info() {
         if(im_req.status==200) {
             this.dir_name = im_req.responseXML.getElementsByTagName("dir")[0].firstChild.nodeValue;
             this.im_name = im_req.responseXML.getElementsByTagName("file")[0].firstChild.nodeValue;
-			imgName = this.im_name;
+            imgName = this.im_name;
+            // 更新显示图片名称
+            $("#current_img_url").text(this.im_name);
         }
         else {
             alert('Fatal: there are problems with fetch_image.cgi');
@@ -385,7 +387,9 @@ function file_info() {
         if(im_req.status==200) {
             this.dir_name = im_req.responseXML.getElementsByTagName("dir")[0].firstChild.nodeValue;
             this.im_name = im_req.responseXML.getElementsByTagName("file")[0].firstChild.nodeValue;
-			imgName = this.im_name;
+            imgName = this.im_name;
+            //更新显示图片名称
+            $("#current_img_url").text(this.im_name);
         }
         else {
             alert('Fatal: there are problems with fetch_prev_image.cgi');
