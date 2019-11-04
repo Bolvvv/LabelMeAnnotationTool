@@ -15,6 +15,7 @@ function GetEventPosY(event) {
 
 function RemoveSpecialChars(str) {
   var re = /\$|@|#|~|`|\%|\*|\^|\&|\+|\=|\[|\]|\}|\{|\;|\:|\'|\"|\<|\>|\?|\||\\|\!|\$/g;
+  console.log("18"+str);
   var aux = str.replace(re,"_");
   aux =  aux.replace(/\s+/g,' ');
   aux = aux.toLowerCase();
@@ -360,3 +361,30 @@ function transImg(){
   console.log("产生请求")
 }
 
+function show_img_url_tree_modal(){
+  //首先销毁树
+  $('#file_tree_modal').jstree("destroy");
+  //显示文件列表
+  $('#file_tree_modal').jstree({
+    'core': {
+      'data': function (obj, callback) {
+        var str;
+        $.ajax({
+          type: "POST",
+          url: "annotationTools/perl/fetch_files_url.cgi",
+          async: false,
+          success: function (result) {
+            console.log("获取文件夹列表成功");
+            str = result;
+          }
+        });
+        jsonstr = JSON.parse(str);
+        callback.call(this, jsonstr);
+      }
+    }
+  }).bind("select_node.jstree", function (e, data) {
+    var href = data.node.a_attr.href
+    document.location.href = href;
+  });;
+  $('#file_url_tree_modal').modal('show');
+}
