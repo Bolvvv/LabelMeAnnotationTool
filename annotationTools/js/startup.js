@@ -84,6 +84,29 @@ function StartupLabelMe() {
             var href = data.node.a_attr.href
             document.location.href = href;
         });;
+
+        //生成模态框文件列表
+        $('#file_tree_modal').jstree({
+          'core': {
+            'data': function (obj, callback) {
+              var str;
+              $.ajax({
+                type: "POST",
+                url: "annotationTools/perl/fetch_files_url.cgi",
+                async: false,
+                success: function (result) {
+                  console.log("获取文件夹列表成功");
+                  str = result;
+                }
+              });
+              jsonstr = JSON.parse(str);
+              callback.call(this, jsonstr);
+            }
+          }
+        }).bind("select_node.jstree", function (e, data) {
+          var href = data.node.a_attr.href
+          document.location.href = href;
+        });;
       };
 
       // Get the image:
