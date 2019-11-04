@@ -292,17 +292,22 @@ function HTMLobjectBox(obj_name) {
   var html_str="";
 
   //标签名称
-
-  objEnter1 = "脑膜瘤";//默认项
-  objEnter2 = "胶质瘤";
-  
+  objEnter1 = "核心";objEnter1_e = "core";
+  objEnter2 = "水肿";objEnter2_e = "edema";
+  objEnter3 = "坏死";objEnter3_e = "necrosis";
   // html_str += '<input name="objEnter" id="objEnter" type="text" style="width:220px;" tabindex="0" value="'+obj_name+'" title="Enter the object\'s name here. Avoid application specific names, codes, long descriptions. Use a name you think other people would agree in using. "';
-  html_str += '<input name="objEnter" id="objEnter1" type="radio" value="Meningioma" ';
-  if(obj_name === objEnter1 || obj_name !== objEnter2) {
+  console.log("123321"+obj_name);
+  html_str += '<input name="objEnter" id="objEnter1" type="radio" value="core" ';
+  if(obj_name === objEnter1_e || (obj_name !== objEnter2_e && obj_name !== objEnter3_e)) {
     html_str += ' checked="checked" ';
   }
   html_str += '/>'+objEnter1;
-  html_str += '<input name="objEnter" id="objEnter2" type="radio" value="Glioma" ';
+  html_str += '<input name="objEnter" id="objEnter2" type="radio" value="edema" ';
+  if(obj_name === objEnter2_e) {
+    html_str += ' checked="checked" ';
+  }
+  html_str += '/>'+objEnter2;
+  html_str += '<input name="objEnter" id="objEnter3" type="radio" value="necrosis" ';
   if(obj_name === objEnter2) {
     html_str += ' checked="checked" ';
   }
@@ -322,7 +327,7 @@ function HTMLobjectBox(obj_name) {
   
   // if there is a list of objects, we need to habilitate the list
   if(object_choices=='...') {
-    html_str += '/> '+objEnter2; // close <input
+    html_str += '/> '+objEnter3; // close <input
   }
   else {
     html_str += 'list="datalist1" />'; // insert list and close <input
@@ -352,19 +357,19 @@ function HTMLoccludedBox(occluded) {
     occluded="no";
   }
   
-  // the value of the selection is inside a hidden field:
-  html_str += 'Is occluded? <input type="hidden" name="occluded" id="occluded" value="'+occluded+'"/>';
+  // // the value of the selection is inside a hidden field:
+  // html_str += 'Is occluded? <input type="hidden" name="occluded" id="occluded" value="'+occluded+'"/>';
   
-  // generate radio button
-  if (occluded=='yes') {
-    html_str += '<input type="radio" name="rboccluded" id="rboccluded" value="yes" checked="yes" onclick="document.getElementById(\'occluded\').value=\'yes\';" />yes';
-    html_str += '<input type="radio" name="rboccluded" id="rboccluded" value="no"  onclick="document.getElementById(\'occluded\').value=\'no\';" />no';
-  }
-  else {
-    html_str += '<input type="radio" name="rboccluded" id="rboccluded" value="yes"  onclick="document.getElementById(\'occluded\').value=\'yes\';" />yes';
-    html_str += '<input type="radio" name="rboccluded" id="rboccluded" value="no" checked="yes"  onclick="document.getElementById(\'occluded\').value=\'no\';" />no';
-  }
-  html_str += '<br />';
+  // // generate radio button
+  // if (occluded=='yes') {
+  //   html_str += '<input type="radio" name="rboccluded" id="rboccluded" value="yes" checked="yes" onclick="document.getElementById(\'occluded\').value=\'yes\';" />yes';
+  //   html_str += '<input type="radio" name="rboccluded" id="rboccluded" value="no"  onclick="document.getElementById(\'occluded\').value=\'no\';" />no';
+  // }
+  // else {
+  //   html_str += '<input type="radio" name="rboccluded" id="rboccluded" value="yes"  onclick="document.getElementById(\'occluded\').value=\'yes\';" />yes';
+  //   html_str += '<input type="radio" name="rboccluded" id="rboccluded" value="no" checked="yes"  onclick="document.getElementById(\'occluded\').value=\'no\';" />no';
+  // }
+  // html_str += '<br />';
   
   return html_str;
 }
