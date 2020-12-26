@@ -1,8 +1,7 @@
-/** @file File containing the image class. 
-* Fetches and manipulates the main image that will be annotated.
-* From the HTML code, create a <img src...> tag with an id and pass
-* this id in as the argument when creating the class.
-
+/**@file包含图像类的文件。
+*获取并操作将被批注的主图像。
+*从HTML代码创建一个<img src.>标记，该标记带有id并传递
+*此id在创建类时作为参数。
 */
 /**
  * Creates an image object
@@ -11,31 +10,23 @@
 */
 function image(id) {
     
-    // *******************************************
-    // Private variables:
-    // *******************************************
-    
     this.file_info = new file_info();
     this.contrast = 128;
     this.id = id;
     this.im = document.getElementById(this.id);
     this.width_orig;
     this.height_orig;
-    this.width_curr;  //current width and height of the image itself
+    this.width_curr;  //当前图片本身的宽度和高度
     this.height_curr;
-    this.im_ratio; // Ratio of (displayed image dims) / (orig image dims)
-    this.browser_im_ratio; // Initial im_ratio; this should not get changed!!
-    this.curr_frame_width;  // Current width of main_media.
-    this.curr_frame_height; // Current height of main_media.
-    
-    // *******************************************
-    // Public methods:
-    // *******************************************
-    
-    /** Fetches a new image based on the URL string or gets a new one at
-     * @param {function} onload_helper - pointer to a helper function that 
-     * is called when the image is loaded.  Typically, this
-     * will call obj.SetImageDimensions().
+    this.im_ratio; //(显示图像调光率)/(原始图像调光率)
+    this.browser_im_ratio; //初始信息比(_R)，不能更改！！
+    this.curr_frame_width;  //当前main_media的宽度
+    this.curr_frame_height; //当前main_media的高度
+
+    /**根据URL字符串获取新图像或在以下位置获取新图像
+    *@param{function}onload_helper-指向
+    *是在加载镜像时调用的。通常情况下，这是
+    *将调用obj.SetImageDimensions()。
     */
     this.GetNewImage = function(onload_helper) {
 	console.log('new image');
@@ -54,22 +45,21 @@ function image(id) {
         edit_popup_open = 0;
     };
     
-    /** Returns the ratio of the available width/height to the original
-     width/height.
-     */
+    /**返回可用宽高与原始宽高之比
+    宽度/高度。
+    */
     this.GetImRatio = function() {
         return this.im_ratio;
     };
     
-    /** Returns file_info object that contains information about the
-      * displayed image.
-     */
+    /**返回FILE_INFO对象，该对象包含有关
+    *显示的图像。
+    */
     this.GetFileInfo = function() {
         return this.file_info;
     };
  
     
-    /** Sets the dimensions of the image based on browser setup. */
     this.SetImageDimensions = function() {
         this.SetOrigImDims(this.image);
         var avail_width = this.GetAvailWidth();
@@ -107,11 +97,11 @@ function image(id) {
     };
     
     
-    /** If (x,y) is not in view, then scroll it into view.  Return adjusted
-     * (x,y) point that takes into account the slide offset.
-     * @param {int} x
-     * @param {int} y
-     * @returns {intarray}
+    /**如果(x，y)不在视图中，则将其滚动到视图中。调整后的回车
+    *(x，y)考虑滑动偏移的点。
+    *@param{int}x
+    *@param{int}y
+    *@return{intarray}
     */
     this.SlideWindow = function (x,y) {
         var pt = Array(2);
@@ -123,29 +113,27 @@ function image(id) {
         pt[1] = y-$("#main_media").scrollTop();
         return pt;
     };
+
     
-    /** Turn off image scrollbars if zoomed in. */
+    
     this.ScrollbarsOff = function () {
         if(!this.IsFitImage()) {
             document.getElementById('main_media').style.overflow = 'hidden';
         }
     };
     
-    /** Turn on image scrollbars if zoomed in. */
+    
     this.ScrollbarsOn = function () {
         if(!this.IsFitImage()) {
             document.getElementById('main_media').style.overflow = 'auto';
         }
     };
     
-    /** Zoom the image given a zoom level (amt) between 0 and inf (or 'fitted'). 
-     * @param {float} amt - amount of zoom
-    */
     this.Zoom = function(amt) {
-        // if a new polygon is being added while the user press the zoom button then do nothing.
+        //如果在用户按缩放按钮的同时添加新多边形，则不执行任何操作。
         if(wait_for_input) return;
         
-        // if an old polygon is being edited while the user press the zoom button then close the polygon and zoom.
+        //如果在用户按缩放按钮时正在编辑旧多边形，则关闭该多边形并缩放。
         if(edit_popup_open) StopEditEvent();
         
         if(amt=='fitted') {
@@ -154,17 +142,17 @@ function image(id) {
                 this.im_ratio = this.im_ratio * amt;
         }
         
-        // if the scale factor is bellow the original scale, then do nothing (do not make the image too small)
+        //如果比例因子低于原始比例，则不做任何操作(不要将图像调得太小)
         if(this.im_ratio < this.browser_im_ratio) {this.im_ratio=this.browser_im_ratio; return;}
         
-        // New width and height of the rescaled picture
+        //新的缩放图片的宽度和高度
         this.width_curr = Math.round(this.im_ratio*this.width_orig);
         this.height_curr = Math.round(this.im_ratio*this.height_orig);
         
-        // Scale and scroll the image so that the center stays in the center of the visible area
+        //缩放并滚动图片，使中心保持在可见区域的中心
         this.ScaleFrame(amt);
         
-    	// Remove polygon from draw canvas:
+    	//从绘图画布中移除多边形：
     	var anno = null;
     	if(draw_anno) {
     	  draw_anno.DeletePolygon();
@@ -172,24 +160,20 @@ function image(id) {
     	  draw_anno = null;
         }
 
-        // set the size of the image (this.im is the image object)
+        //设置图片大小(this.im为图片对象)
         this.im.width = this.width_curr;
         this.im.height = this.height_curr;
-        // set the size of all the canvases
+        //设置所有画布的大小
         $("#myCanvas_bg").width(this.width_curr).height(this.height_curr);
         $("#select_canvas").width(this.width_curr).height(this.height_curr);
         $("#draw_canvas").width(this.width_curr).height(this.height_curr);
         $("#query_canvas").width(this.width_curr).height(this.height_curr);
-        
-        // Draw Image in canvas
 
-        
         main_media.DisplayWithContrast(main_media.contrast);
-        // Redraw polygons.
+        //重画多边形。
     	main_canvas.RenderAnnotations();
 
     	if(anno) {
-    	  // Draw polyline:
     	  draw_anno = anno;
     	  draw_anno.SetDivAttach('draw_canvas');
     	  draw_anno.DrawPolyLine(draw_x, draw_y);
@@ -205,48 +189,38 @@ function image(id) {
             adjust_event.ShowControlPoints();
         }
 
-    	/*************************************************************/
-    	/*************************************************************/
-    	// Scribble: 
     	if (drawing_mode == 1){
     	  scribble_canvas.redraw();
     	  scribble_canvas.drawMask();
         }
-    	/*************************************************************/
-    	/*************************************************************/
     };
     
     
-    
-    // *******************************************
-    // Private methods:
-    // *******************************************
-    
-    /** Tells the picture to take up the available space in the browser, if it needs it. 6.29.06*/
+    /**告诉图片占用浏览器中的可用空间(如果需要)。6.29.06*/
     this.ScaleFrame = function(amt) {
-        // Look at the available browser (height,width) and the image (height,width),
-        // and use the smaller of the two for the main_media (height,width).
-        // also center the image so that after rescaling, the center pixels visible stays at the same location
-        //var avail_height = this.GetAvailHeight();
+        //查看可用的浏览器(Height，Width)和图片(Height，Width)
+        //并将两者中较小的一个用于main_media(高度、宽度)。
+        //也使图片居中，调整比例后，可见的中心像素保持在同一位置
+        //var avail_Height=this.GetAvailHeight()；
         this.curr_frame_height = Math.min(this.GetAvailHeight(), this.height_curr);
         
         //var avail_width = this.GetAvailWidth();
         this.curr_frame_width = Math.min(this.GetAvailWidth(), this.width_curr);
         
-        // also center the image so that after rescaling, the center pixels visible stays at the same location
-        cx = $("#main_media").scrollLeft()+this.curr_frame_width/2.0; // current center
+        //也使图片居中，调整比例后，可见的中心像素保持在同一位置
+        cx = $("#main_media").scrollLeft()+this.curr_frame_width/2.0; //当前中心
         cy = $("#main_media").scrollTop()+this.curr_frame_height/2.0;
-        Dx = Math.max(0, $("#main_media").scrollLeft()+(amt-1.0)*cx); // displacement needed
+        Dx = Math.max(0, $("#main_media").scrollLeft()+(amt-1.0)*cx); //需要位移
         Dy = Math.max(0, $("#main_media").scrollTop()+(amt-1.0)*cy);
         
-        // set the width and height and scrolls
+        //设置宽度、高度和卷轴
         $("#main_media").scrollLeft(Dx).scrollTop(Dy);
         $("#main_media").width(this.curr_frame_width).height(this.curr_frame_height);
         
     };
     
     
-    /** Retrieves and sets the original image's dimensions (width/height).
+    /**检索并设置原始图片的尺寸(宽/高)。
      * @param {image} im
     */
     this.SetOrigImDims = function (im) {
@@ -255,13 +229,13 @@ function image(id) {
         return;
     };
     
-    /** gets available width (6.14.06) */
+    /**获取可用宽度(6.14.06)*/
     this.GetAvailWidth = function() {
         return $(window).width() - $("#main_media").offset().left -10 - 200;
-        // we could include information about the size of the object box using $("#anno_list").offset().left
+        //我们可以使用$(“#anno_list”).offset().Left包含有关对象框大小的信息
     };
     
-    /** gets available height (6.14.06) */
+    /**获取可用高度(6.14.06)*/
     this.GetAvailHeight = function() {
         var m = main_media.GetFileInfo().GetMode();
         if(m=='mt') {
@@ -270,14 +244,12 @@ function image(id) {
         return $(window).height() - $("#main_media").offset().top -10;
     };
     
-    
-    
-    /** Returns true if the image is zoomed to the original (fitted) resolution. */
+    /**如果图像缩放到原始(适合的)分辨率，则返回TRUE。*/
     this.IsFitImage = function () {
         return (this.im_ratio < 0.01+this.browser_im_ratio);
     };
     
-    /** Returns true if (x,y) is viewable. */
+    /**如果(x，y)可见，则返回TRUE。*/
     this.IsPointVisible = function (x,y) {        
         var scrollLeft = $("#main_media").scrollLeft();
         var scrollTop = $("#main_media").scrollTop();
@@ -286,7 +258,7 @@ function image(id) {
             (x*this.im_ratio - scrollLeft > this.curr_frame_width - 160)) || 
            ((y*this.im_ratio < scrollTop) || 
             (y*this.im_ratio - scrollTop > this.curr_frame_height))) 
-            return false;  //the 160 is about the width of the right-side div
+            return false; 
         return true;
     };
 	this.ObtainImagePixels = function(){

@@ -9,7 +9,7 @@ grabCut = Module.cwrap(
     'grabCut', 'string', ['number', 'number', 'number', 'number', 'number']
 );
 
-// Indicates whether we are in segmentation or polygon mode
+//指示我们是处于分段模式还是多边形模式
 drawing_mode = 0;
 
 
@@ -45,11 +45,10 @@ function Scribble_canvas(tag) {
   this.scribble_name;
   this.scribblecanvas;
 
-  // These two functions are called to show and hide the spinner wheel 
-  // when the segmentation is in progress
+  //调用这两个函数来显示和隐藏微调器滚轮
+  //正在进行分段时
   this.showspinner = function (){
     scribble_canvas.scribblecanvas.setAttribute('style','cursor: progress');
-    //document.getElementById('segmentbtn').disabled = true;
     document.getElementById('donebtn').disabled = true;
     $('#loadspinner').show();
   }
@@ -60,11 +59,10 @@ function Scribble_canvas(tag) {
     else if (val == BG_DRAWING) scribble_canvas.scribblecanvas.setAttribute('style','cursor:url(Icons/blue_pointer.cur), default');
     else scribble_canvas.scribblecanvas.setAttribute('style','cursor:url(Icons/rubber_pointer.cur), default');
     document.getElementById('donebtn').disabled = false;
-    //document.getElementById('segmentbtn').disabled = false;
     $('#loadspinner').hide();
   }
 
-  // Clean the scribbles from the canvas.
+  //清除画布上的涂鸦。
   this.cleanscribbles = function (){
     this.clickX = new Array();
     this.clickY = new Array();
@@ -76,8 +74,8 @@ function Scribble_canvas(tag) {
     this.redraw();
   };
 
-  // This function is called once we set the scribble mode. It prepares the canvas where the scribbles
-  // will be drawn and initializes the necessary data structures.
+  //一旦设置了涂鸦模式，就会调用该函数。它准备画布，在那里涂鸦
+  //将绘制并初始化必要的数据结构。
   this.startSegmentationMode = function(){
     this.clickX = new Array();
     this.clickY = new Array();
@@ -87,14 +85,14 @@ function Scribble_canvas(tag) {
     this.prepareHTMLtoDraw();    
   };
 
-  // Close the canvas where the scribbles will be drawn.
+  //关闭将绘制涂鸦的画布。
   this.CloseCanvas = function()  {
     var p = document.getElementById('canvasDiv');
     p.parentNode.removeChild(p);
   };
 
-  // Draws the scribbles in the canvas according to the zoom parameter
-  // The function loops over clickX, clickY to know the coordinates of the scribbles.
+  //根据zoom参数在画布上绘制涂鸦
+  //该函数循环到clickX上，单击以了解涂鸦的坐标。
   this.redraw = function(){
     this.scribblecanvas.setAttribute('width', main_media.width_curr);
     this.scribblecanvas.setAttribute('height',main_media.height_curr);
@@ -138,7 +136,7 @@ function Scribble_canvas(tag) {
     }
   };
  
-  // Saves the resized scribbles into the server to create the segmentation
+  //将调整后的涂鸦保存到服务器中创建分段
   this.save = function (dataURL, imname, dir, callback){
     $.ajax({
       async: true,
@@ -155,7 +153,7 @@ function Scribble_canvas(tag) {
   };
   
 
-  // General function to synchronously create a directory from a given url
+  //从给定的url同步创建目录的通用函数
   this.createDir = function(url, callback){
     $.ajax({
       async: true,
@@ -170,11 +168,6 @@ function Scribble_canvas(tag) {
   };
 
 
-  // ********************************************
-  // THESE FUNCTIONS ARE COPIES OF ALREADY IMPLEMENTED FUNCTIONS BUT 
-  // ADAPTED TO SEGMENTATIONS. I REWROTE THEM HERE TO AVOID MIXING CODE 
-  // BUT SHOULD BE REFACTORED WITH THE REST
-  // ********************************************
   this.DrawToQuery = function () {
     if((object_choices!='...') && (object_choices.length==1)) {
       main_handler.SubmitQuery();
@@ -183,42 +176,42 @@ function Scribble_canvas(tag) {
     }
     active_canvas = QUERY_CANVAS;
 
-    // Move draw canvas to the back:
+    //将画布移到后面：
     document.getElementById('draw_canvas').style.zIndex = -2;
     document.getElementById('draw_canvas_div').style.zIndex = -2;
     
-    // Remove polygon from draw canvas:
+    //从绘图画布中移除多边形：
     var anno = null;
     if(draw_anno) {
       draw_anno.DeletePolygon();
       anno = draw_anno;
       draw_anno = null;
     }
-    // Move query canvas to front:
+    //将查询画布前移：
     document.getElementById('query_canvas').style.zIndex = 0;
     document.getElementById('query_canvas_div').style.zIndex = 0;
     
-    // Set object list choices for points and lines:
+    //设置点和线的对象列表选项：
     var doReset = SetObjectChoicesPointLine(anno.GetPtsX().length);
     
-    // Get location where popup bubble will appear:
+    //获取弹出泡沫的出现位置：
     var im_ratio = main_media.GetImRatio();
     var pt = main_media.SlideWindow((scribble_canvas.object_corners[0]*im_ratio + scribble_canvas.object_corners[2]*im_ratio)/2,(scribble_canvas.object_corners[1]*im_ratio + scribble_canvas.object_corners[3]*im_ratio)/2);
     
-    // Make query popup appear.
+    //弹出查询
     main_media.ScrollbarsOff();
     WriteLogMsg('*What_is_this_object_query');
     
     mkPopup(pt[0],pt[1], true);
 
-    // Focus the cursor inside the box
+    //将光标放在框内
     document.getElementById('objEnter').focus();
     document.getElementById('objEnter').select();
   
-    // If annotation is point or line, then 
+    //如果批注是点或线，则
     if(doReset) object_choices = '...';
     
-    // Render annotation:
+    //渲染注释：
     query_anno = anno;
     query_anno.SetDivAttach('query_canvas');
     var anno_id = query_anno.GetAnnoID();
@@ -234,13 +227,13 @@ function Scribble_canvas(tag) {
   };
   
 
-  // Called after the segmentation is done. It prepares an annotation 
-  // object describing the new segmentation and shows up a bubble to 
-  // introduce the name of the object.  If the user was editing a 
-  // segmentation we update the xml with the new coordinates of the 
-  // bounding box.
+  //分段完成后调用它准备一个批注
+  //描述新细分的对象，并显示泡沫以
+  //介绍Object的名称如果用户正在编辑
+  //分段我们使用
+  //边界框。
   this.preparetoSubmit = function(){
-    if (this.annotationid == -1){ // The segmentation was new
+    if (this.annotationid == -1){
 
       var anno = new annotation(LMnumberOfObjects(LM_xml));
       anno.scribble = new scribble(anno.anno_id);
@@ -257,14 +250,14 @@ function Scribble_canvas(tag) {
       this.image_name = imagname+'_mask_'+Nobj+'.png';
       this.scribble_name = imagname+'_scribble_'+Nobj+'.png';
       
-      // Draw polygon on draw canvas:
+      //在绘图画布上绘制多边形：
       draw_anno = anno;
       draw_anno.SetDivAttach('draw_canvas');
       var X_array = [scribble_canvas.object_corners[0],scribble_canvas.object_corners[2],scribble_canvas.object_corners[2],scribble_canvas.object_corners[0]];
       var Y_array = [scribble_canvas.object_corners[1], scribble_canvas.object_corners[1], scribble_canvas.object_corners[3], scribble_canvas.object_corners[3]];
       draw_anno.DrawPolygon(main_media.GetImRatio(), X_array,Y_array);
       
-      // Set polygon actions:
+      //设置多边形动作：
       draw_anno.SetAttribute('onmousedown','StartEditEvent(' + draw_anno.GetAnnoID() + ',evt); return false;');
       draw_anno.SetAttribute('onmousemove','main_handler.CanvasMouseMove(evt,'+ draw_anno.GetAnnoID() +'); return false;');
       draw_anno.SetAttribute('oncontextmenu','return false');
@@ -272,7 +265,7 @@ function Scribble_canvas(tag) {
       
       this.DrawToQuery();
     }
-    else { // We were editting a segmentation
+    else { //我们正在编辑一个分段
       var anno = new annotation(this.annotationid); 
       anno.SetType(1);
       anno.scribble = new scribble(this.annotationid);
@@ -299,10 +292,8 @@ function Scribble_canvas(tag) {
     }
   }
 
-  // Updates the XML with the object 'idx' according to the edited 
-  // segmentation.  It updates the boundaries of the polygon enclosing 
-  // the segmentation and the boundaries of the image containing the 
-  // segmentation.  
+  //根据编辑的
+  //分段。它会更新封闭的面的边界包含分段。
   this.UpdateMaskXML = function (idx){
     $(LM_xml).children("annotation").children("object").eq(idx).children("segm").children("scribbles").children("xmin").text(scribble_canvas.image_corners[0]);
     $(LM_xml).children("annotation").children("object").eq(idx).children("segm").children("scribbles").children("ymin").text(scribble_canvas.image_corners[1]);
@@ -331,7 +322,7 @@ function Scribble_canvas(tag) {
     var size = imageData.data.length * imageData.data.BYTES_PER_ELEMENT;
     var imagePtr = Module._malloc(size);
     var scribblePtr = Module._malloc(size);
-    // Copy data to Emscripten heap (directly accessed from Module.HEAPU8)
+    //将数据复制到Emscripten堆(直接从Module.HEAPU8访问)
 
     var imageHeap = new Uint8Array(Module.HEAPU8.buffer, imagePtr, size);
     imageHeap.set(new Uint8Array(imageData.data.buffer));
@@ -339,18 +330,18 @@ function Scribble_canvas(tag) {
     var scribbleHeap = new Uint8Array(Module.HEAPU8.buffer, scribblePtr, size);
     scribbleHeap.set(new Uint8Array(scribbleData.data.buffer));
 
-    // Call function and get result
+    //调用函数获取结果
     var params = grabCut(imageHeap.byteOffset, scribbleHeap.byteOffset, imageData.height, imageData.width, scribble_canvas.colorseg);
 
     var resultData = new Uint8ClampedArray(imageHeap.buffer, imageHeap.byteOffset, imageData.data.length);
     
-    // Create canvas to store result
+    //创建画布存储结果
     var result = document.createElement('canvas');
     result.width = imageData.width;
     result.height = imageData.height;
     var resultImageData = result.getContext('2d').createImageData(imageData.width, imageData.height);
     resultImageData.data.set(resultData);
-    // Free memory
+    //空闲内存
     Module._free(imageHeap.byteOffset);
     Module._free(scribbleHeap.byteOffset);
    
@@ -510,12 +501,7 @@ function Scribble_canvas(tag) {
     
   };
 
-  // This function is called when the user clicks the segment or done 
-  // button. It creates the segmentation and prepares a query if the 
-  // user has hit done.  If the scribbles have not changed since the 
-  // last time the user segmented the image it will avoid calculating 
-  // the new mask.
-
+  //当用户点击片段或完成时调用该函数按钮。它创建分段并准备查询，如果用户已单击“完成”。如果涂鸦自上次用户分割图片会避免计算新的掩码。
   this.segmentImage = function(annotation_ended){
     if (drawing_mode == 0){
       SetDrawingMode(1);
@@ -537,12 +523,7 @@ function Scribble_canvas(tag) {
     }
   };
 
-  // Crops an image surrounding the scribbles drawn by the user and 
-  // saves a resized version of the original image and the scribbles to 
-  // compute the segmentation mask. The resizing is done accordingly to 
-  // the size of the scribbles to avoid having to segment big images 
-  // when the user annotates big objects.
-
+  //裁剪用户绘制的涂鸦周围的图像，并将原始图像的调整大小版本和涂鸦保存到计算分段掩码调整大小是根据以下条件进行的涂鸦的大小，避免对大图进行分割当用户注释大对象时。
   this.segment = function (annotation_ended){
     var clx = Math.max(0, this.minclicX-(this.maxclicX - this.minclicX)*0.25);
     var crx = Math.min(main_media.width_orig, this.maxclicX+(this.maxclicX - this.minclicX)*0.25);
@@ -602,7 +583,7 @@ function Scribble_canvas(tag) {
   }
   
 
-  // Creates the div elements to insert the scribble_canvas in the html
+  //创建div元素在html中插入scribble_canvas
   this.prepareHTMLtoDraw = function(){  
     html_str = '<div id="canvasDiv" ';
     html_str+='style="position:absolute;left:0px;top:0px;z-index:1;width:100%;height:100%;background-color:rgba(128,64,0,0);">';
@@ -611,7 +592,7 @@ function Scribble_canvas(tag) {
     $(document).ready(function() {scribble_canvas.prepareDrawingCanvas();});
   };
 
-  // Creates the canvas where the scribbles will be drawn.  
+  //创建将在其中绘制涂鸦的画布。  
   this.prepareDrawingCanvas = function(){
     this.canvasDiv = document.getElementById('canvasDiv'); 
     this.scribblecanvas = document.createElement('canvas');
@@ -653,8 +634,8 @@ function Scribble_canvas(tag) {
     });
   };
 
-  // Called each periodically while dragging the mouse over the screen. 
-  // Saves the coordinates of the clicks introduced by the user.
+  //在屏幕上拖动鼠标时定期调用每个函数。
+  //保存用户引入的点击坐标
   this.addClick = function(x, y, dragging){
     this.flag_changed = 1;
     var ratio = main_media.GetImRatio();  
@@ -676,7 +657,6 @@ function Scribble_canvas(tag) {
     this.clickColor.push(this.currently_drawing);
   };
 
-  // changes to foreground/backgorund/rubber
   this.setCurrentDraw = function(val){
     if (drawing_mode == 0){ 
       SetDrawingMode(1);
@@ -707,7 +687,6 @@ function KeepEditingScribbles(){
   document.getElementById('query_canvas_div').style.zIndex = -2;
   active_canvas = REST_CANVAS;
   
-  // Remove polygon from the query canvas:
   query_anno.DeletePolygon();
   query_anno = null;
   
@@ -715,8 +694,8 @@ function KeepEditingScribbles(){
   main_media.ScrollbarsOn();
 }
 
-// Prepares the canvas to edit a segmentation. It loads the corresponding 
-// scribbles to the canvas for the user to start editing them.
+//准备画布以编辑分段。它加载相应的
+//手写到画布上，以便用户开始编辑它们。
 function EditBubbleEditScribble(){
   active_canvas  = DRAW_CANVAS;
   main_handler.objEnter = document.getElementById('objEnter').value;
@@ -726,7 +705,6 @@ function EditBubbleEditScribble(){
   document.getElementById('select_canvas').style.zIndex = -2;
   document.getElementById('select_canvas_div').style.zIndex = -2;
   
-  // Remove polygon from the query canvas:
   select_anno.DeletePolygon();
   var anno = select_anno;
   select_anno = null;
@@ -747,22 +725,17 @@ function EditBubbleEditScribble(){
   }
 }
 
-// *************************** 
-// PLOTTING FUNCTIONS
-// ***************************
-
-// Same as the original LMplot but including the possibility to add
-// segmentation objects.
+//与原始LMlot相同，但包含添加的可能性
+//对对象进行分段。
 function LMplot(xml,imagename) {
-  // Display image:
   $('body').append('<svg id="canvas" width="2560" height="1920" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><image id="img" xlink:href="' + imagename + '" x="0" y="0" height="1920" width="2560" /></svg>');
   $('#myCanvas_bg').empty();
-  // Display polygons:
+  //显示多边形：
   var N = $(xml).children("annotation").children("object").length;
   for(var i = 0; i < N; i++) {
     var obj = $(xml).children("annotation").children("object").eq(i);
     if(!parseInt(obj.children("deleted").text())) {
-      // Get object name:
+      //获取Object名称：
       var name = obj.children("name").text();
       
       // Get points:
@@ -793,8 +766,8 @@ function LMplot(xml,imagename) {
 
   return 'canvas';
 }
-// Plots the segmentation mask over the canvas, indicated by div_attach
-// the field 'modified' is used to reload the mask from cache when neeeded. 
+//在画布上绘制分段遮罩，由div_attach指示
+//Modified字段用于在需要时从缓存中重新加载掩码
 function DrawSegmentation ( div_attach, link, width, height, modified, aux){
   this.svgNS = "http://www.w3.org/2000/svg";
   this.xlinkNS = "http://www.w3.org/1999/xlink";
@@ -811,7 +784,7 @@ function DrawSegmentation ( div_attach, link, width, height, modified, aux){
   return id;
 }
 
-// Clears the segmentation mask with id = 'id' from the canvas
+//从画布中清除id=‘id’的分段掩码
 function ClearMask (id){
   var q = document.getElementById(id);
   if(q) q.parentNode.removeChild(q);
@@ -825,18 +798,18 @@ function GetPackFile(){
 
 
 function scribble (id){
-  this.cache_random_number = Math.random(); // This avoids cache loading - there must be a better solution
+  this.cache_random_number = Math.random(); //这避免了缓存加载--肯定有更好的解决方案
   this.annot_id = id;
-  // Get the name of the image containing the mask for the segmentation
+  //获取包含分割掩码的图像名称
   this.GetImName = function (){
     return LMgetObjectField(LM_xml, this.annot_id, 'mask_name');
   };
 
-  // Get the name of the image containing the scribbles for the segmentation
+  //获取包含分割涂鸦的图片名称
   this.GetScribbleName = function (){
     return LMgetObjectField(LM_xml, this.annot_id, 'scribble_name');
   };
-  // Gets the location of the image containing the mask for the segmentation
+  //获取包含用于分割的蒙版的图像的位置
   this.GetMaskURL = function (){
     var url_name =  $(LM_xml).children("annotation").children("object").eq(this.annot_id).children("segm").children("mask").text();
     var url_folder =  $(LM_xml).children("annotation").children("folder").text();
@@ -845,7 +818,7 @@ function scribble (id){
     url_name = dir+'/Masks/'+url_folder+'/'+url_name;
     return url_name;
   };
-  // Get the corners of the cropped image that was used to create the segmentation
+  //获取用于创建分割的裁剪图片的角点
   this.GetCornerRX = function (){
       var res = LMgetObjectField(LM_xml, this.annot_id,'imagecorners');
     return res[2];

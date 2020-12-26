@@ -1,14 +1,12 @@
-/** @file  Sign in form for a user to enter their LabelMe username. */
-
-// This code is very complex for what it is doing.
-// Needs optimization
-//
-// PlaceSignInHTML() is complex. Needs to make more explicit all the elements.
+/**@用户输入其LabelMe用户名的文件登录表单。*/
+//这段代码对于它所做的事情来说非常复杂。
+//需要优化
+//PlaceSignInHTML()比较复杂。需要使所有元素更加明确。
 
 
 function initUserName() {
-    // The first time we get the username will give preference to the username passed
-    //   in the URL as it might come from the LabelMe browser.
+    //我们第一次获取用户名时，会优先考虑传递的用户名
+    //在URL中，因为它可能来自LabelMe浏览器。
     username = getQueryVariable("username");
 
     if (!username || (username.length==0)) {
@@ -25,10 +23,10 @@ function initUserName() {
 }
 
 function show_enterUserNameDIV() {
-    // This function simply swaps the divs to show the "changeAndDisplayUserName" div
+    //此函数简单地交换div以显示“changeAndDisplayUserName”div
     $("#display_user").hide();
     $("#enterUserName").show();
-    // put the cursor inside the text box
+    //将光标放在文本框内
     document.getElementById('userEnter').focus();
     document.getElementById('userEnter').select();
 
@@ -36,9 +34,9 @@ function show_enterUserNameDIV() {
 }
 
 function changeAndDisplayUserName(c) {
-    // Shows the entered name.
-    // c is the key that produced getting out of the text box.
-    // only change the username is the user pressed "enter" -> c==13
+    //显示输入的名称。
+    //c是产生退出文本框的密钥。
+    //只有用户按“Enter”键才能更改用户名->c==13
     if (c==13){
         username = $("#userEnter").val();
     

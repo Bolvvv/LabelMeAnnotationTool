@@ -1,79 +1,59 @@
-/** @file This file contains the functions to adjust an existing polygon. */
+/** @file 此文件包含调整现有多边形的函数。 */
 /**
- * Creates the adjusting event
  * @constructor
 
  
- * @param {string} dom_attach - The html element where the polygon lives
- * @param {array} x - The x coordinates for the polygon points
- * @param {array} y - The y coordinates for the polygon points
- * @param {string} obj_name - The name of the adjusted_polygon
- * @param {function} ExitFunction - the_function to execute once adjusting is done
- * @param {float} scale - Scaling factor for polygon points
+ * @param {string} dom_attach
+ * @param {array} x
+ * @param {array} y
+ * @param {string} obj_name
+ * @param {function} ExitFunction
+ * @param {float} scale
 */
 function AdjustEvent(dom_attach,x,y,obj_name,ExitFunction,scale, bounding_box_annot) {
 
-  /****************** Private variables ************************/
-
-  // ID of DOM element to attach to:
   this.bounding_box = bounding_box_annot;
 
   this.dom_attach = dom_attach;
   this.scale_button_pressed = false;
-  // Polygon:
   this.x = x;
   this.y = y;
 
-  // Object name:
   this.obj_name = obj_name;
 
-  // Function to call when event is finished:
   this.ExitFunction = ExitFunction;
 
-  // Scaling factor for polygon points:
   this.scale = scale;
 
-  // Boolean indicating whether a control point has been edited:
   this.editedControlPoints = false;
 
-  // Boolean indicating whether a control point is being edited:
   this.isEditingControlPoint = false;
 
-// Boolean indicating whether a scaling point is being edited:
   this.isEditingScalingPoint = false;
 
-  // Boolean indicating whether the center of mass of the polygon is being 
-  // adjusted:
   this.isMovingCenterOfMass = false;
 
-  // Index into which control point has been selected:
   this.selectedControlPoint;
 
-  // Index into which scaling point has been selected:
   this.selectedScalingPoint;
 
-  // Location of center of mass:
   this.center_x;
   this.center_y;
 
-  // Element ids of drawn control points:
   this.control_ids = null;
 
   this.scalepoints_ids = null;
 
-  // Element id of drawn center point:
   this.center_id = null;
 
-  // ID of drawn polygon:
-  this.polygon_id;
+     this.polygon_id;
 
-  /****************** Public functions ************************/
+  
 
-  /** This function starts the adjusting event: */
+  
   this.StartEvent = function() {
     console.log('LabelMe: Starting adjust event...');
-    // Draw polygon:
-
+     
     this.polygon_id = this.DrawPolygon(this.dom_attach,this.x,this.y,this.obj_name,this.scale);
     select_anno.polygon_id = this.polygon_id;
     FillPolygon(this.polygon_id);
@@ -82,25 +62,21 @@ function AdjustEvent(dom_attach,x,y,obj_name,ExitFunction,scale, bounding_box_an
       oVP.CreateLabeledFramesNavigationButtons();
       $('#myCanvas_bg').css('opacity', 0.5);
     }
-    // Set mousedown action to stop adjust event when user clicks on canvas:
-
+    
     $('#'+this.dom_attach).unbind();
     $('#'+this.dom_attach).mousedown({obj: this},function(e) {
       return e.data.obj.StopAdjustEvent();
       });
 
-    // Lower opacity of the rest of elements
-
-    // Show control points:
-    if (this.bounding_box){
+      
+          if (this.bounding_box){
       this.ShowScalingPoints();
       this.ShowCenterOfMass();
       return;
 
     }
     this.ShowControlPoints();
-    // Show center of mass:
-    this.ShowCenterOfMass();
+          this.ShowCenterOfMass();
     
     
     $(window).keydown({obj: this}, function (e){
@@ -125,16 +101,13 @@ function AdjustEvent(dom_attach,x,y,obj_name,ExitFunction,scale, bounding_box_an
     });
   };
   
-  /** This function stops the adjusting event and calls the ExitFunction: */
+  
   this.StopAdjustEvent = function() {
-    // Remove polygon:
-    $('#'+this.polygon_id).parent().remove();
+          $('#'+this.polygon_id).parent().remove();
 
-    // Remove key press action
-    $(window).unbind("keydown");
+          $(window).unbind("keydown");
     $(window).unbind("keyup");
-    // Remove control points and center of mass point: 
-    this.RemoveControlPoints();
+          this.RemoveControlPoints();
     this.RemoveCenterOfMass();
     this.RemoveScalingPoints();
     console.log('LabelMe: Stopped adjust event.');
@@ -144,12 +117,11 @@ function AdjustEvent(dom_attach,x,y,obj_name,ExitFunction,scale, bounding_box_an
     }
     
     if (video_mode) $('#myCanvas_bg').css('opacity', 1);
-    // Call exit function:
-
+      
     this.ExitFunction(this.x,this.y,this.editedControlPoints);
   };
 
-  /** This function shows the scaling points for a polygon */
+  
   this.ShowScalingPoints = function (){
     if(!this.scalepoints_ids) this.scalepoints_ids = new Array();
     for (var i = 0; i < this.x.length; i++){
@@ -161,7 +133,7 @@ function AdjustEvent(dom_attach,x,y,obj_name,ExitFunction,scale, bounding_box_an
 
   }
 
-  /** This function removes the displayed scaling points for a polygon */
+  
   this.RemoveScalingPoints = function (){
     if(this.scalepoints_ids) {
       for(var i = 0; i < this.scalepoints_ids.length; i++) $('#'+this.scalepoints_ids[i]).remove();
@@ -169,21 +141,19 @@ function AdjustEvent(dom_attach,x,y,obj_name,ExitFunction,scale, bounding_box_an
     }
   }
 
-  /** This function shows the control points for a polygon */
+  
   this.ShowControlPoints = function() {
     if(!this.control_ids) this.control_ids = new Array();
     for(var i = 0; i < this.x.length; i++) {
-      // Draw control point:
-      this.control_ids.push(DrawPoint(this.dom_attach,this.x[i],this.y[i],'r="5" fill="#00ff00" stroke="#ffffff" stroke-width="2.5"',this.scale));
+              this.control_ids.push(DrawPoint(this.dom_attach,this.x[i],this.y[i],'r="5" fill="#00ff00" stroke="#ffffff" stroke-width="2.5"',this.scale));
       
-      // Set action:
-      $('#'+this.control_ids[i]).mousedown({obj: this,point: i},function(e) {
+              $('#'+this.control_ids[i]).mousedown({obj: this,point: i},function(e) {
          return e.data.obj.StartMoveControlPoint(e.data.point);
       });
     }
   };
 
-  /** This function removes the displayed control points for a polygon */
+  
   this.RemoveControlPoints = function() {
     if(this.control_ids) {
       for(var i = 0; i < this.control_ids.length; i++) $('#'+this.control_ids[i]).remove();
@@ -191,24 +161,21 @@ function AdjustEvent(dom_attach,x,y,obj_name,ExitFunction,scale, bounding_box_an
     }
   };
 
-  /** This function shows the middle grab point for a polygon. */
+  
   this.ShowCenterOfMass = function() {
     var MarkerSize = 8;
     if(this.x.length==1) MarkerSize = 6;
     
-    // Get center point for polygon:
-    this.CenterOfMass(this.x,this.y);
+          this.CenterOfMass(this.x,this.y);
     
-    // Draw center point:
-    this.center_id = DrawPoint(this.dom_attach,this.center_x,this.center_y,'r="' + MarkerSize + '" fill="red" stroke="#ffffff" stroke-width="' + MarkerSize/2 + '"',this.scale);
+          this.center_id = DrawPoint(this.dom_attach,this.center_x,this.center_y,'r="' + MarkerSize + '" fill="red" stroke="#ffffff" stroke-width="' + MarkerSize/2 + '"',this.scale);
     
-    // Set action:
-    $('#'+this.center_id).mousedown({obj: this},function(e) {
+          $('#'+this.center_id).mousedown({obj: this},function(e) {
        return e.data.obj.StartMoveCenterOfMass();
       });
   };
 
-  /** This function removes the middle grab point for a polygon */
+  
   this.RemoveCenterOfMass = function() {
     if(this.center_id) {
       $('#'+this.center_id).remove();
@@ -261,21 +228,17 @@ function AdjustEvent(dom_attach,x,y,obj_name,ExitFunction,scale, bounding_box_an
       if (proportion) pry = prx;
       if (prx <= 0 || pry  <= 0 ) return;
       for (var i = 0; i < this.x.length; i++){
-      // Set point:
-        var dx = (this.x[i] - origx)*prx;
+                var dx = (this.x[i] - origx)*prx;
         var dy = (this.y[i] - origy)*pry;
         x = origx + dx;
         y = origy + dy;
         this.x[i] = Math.max(Math.min(x,main_media.width_orig),1);
         this.y[i] = Math.max(Math.min(y,main_media.height_orig),1);
       }
-      // Remove polygon and redraw:
-      $('#'+this.polygon_id).parent().remove();
-      //$('#'+this.polygon_id).remove();
-      this.polygon_id = this.DrawPolygon(this.dom_attach,this.x,this.y,this.obj_name,this.scale);
+              $('#'+this.polygon_id).parent().remove();
+              this.polygon_id = this.DrawPolygon(this.dom_attach,this.x,this.y,this.obj_name,this.scale);
       select_anno.polygon_id = this.polygon_id;
-      // Adjust control points:
-
+        
       this.RemoveScalingPoints();
       this.ShowScalingPoints();
     }
@@ -294,8 +257,7 @@ function AdjustEvent(dom_attach,x,y,obj_name,ExitFunction,scale, bounding_box_an
       if (video_mode) main_media.UpdateObjectPosition(select_anno, this.x, this.y);
 
       this.ShowCenterOfMass();
-      // Set action:
-      $('#'+this.dom_attach).unbind();
+              $('#'+this.dom_attach).unbind();
       $('#'+this.dom_attach).mousedown({obj: this},function(e) {
         return e.data.obj.StopAdjustEvent();
       });
@@ -333,21 +295,16 @@ function AdjustEvent(dom_attach,x,y,obj_name,ExitFunction,scale, bounding_box_an
       var x = GetEventPosX(event);
       var y = GetEventPosY(event);
       
-      // Set point:
-      this.x[this.selectedControlPoint] = Math.max(Math.min(Math.round(x/this.scale),main_media.width_orig),1);
+              this.x[this.selectedControlPoint] = Math.max(Math.min(Math.round(x/this.scale),main_media.width_orig),1);
       this.y[this.selectedControlPoint] = Math.max(Math.min(Math.round(y/this.scale),main_media.height_orig),1);
 
       this.originalx = this.x;
       this.originaly = this.y;
       
-      // Remove polygon and redraw:
-      //if ($('#'+this.polygon_id).is('image')) $('#'+this.polygon_id).remove();
-      $('#'+this.polygon_id).parent().remove();
-      //$('#'+this.polygon_id).remove();
-      this.polygon_id = this.DrawPolygon(this.dom_attach,this.x,this.y,this.obj_name,this.scale);
+                      $('#'+this.polygon_id).parent().remove();
+              this.polygon_id = this.DrawPolygon(this.dom_attach,this.x,this.y,this.obj_name,this.scale);
       select_anno.polygon_id = this.polygon_id;
-      // Adjust control points:
-      this.RemoveControlPoints();
+              this.RemoveControlPoints();
       this.ShowControlPoints();
     }
   };
@@ -364,8 +321,7 @@ function AdjustEvent(dom_attach,x,y,obj_name,ExitFunction,scale, bounding_box_an
       this.ShowCenterOfMass();
       this.isEditingControlPoint = false;
       if (video_mode) main_media.UpdateObjectPosition(select_anno, this.x, this.y);
-      // Set action:
-      $('#'+this.dom_attach).unbind();
+              $('#'+this.dom_attach).unbind();
       $('#'+this.dom_attach).mousedown({obj: this},function(e) {
         return e.data.obj.StopAdjustEvent();
       });
@@ -402,33 +358,27 @@ function AdjustEvent(dom_attach,x,y,obj_name,ExitFunction,scale, bounding_box_an
       var x = GetEventPosX(event);
       var y = GetEventPosY(event);
       
-      // Get displacement:
-      var dx = Math.round(x/this.scale)-this.center_x;
+              var dx = Math.round(x/this.scale)-this.center_x;
       var dy = Math.round(y/this.scale)-this.center_y;
       
-      // Adjust dx,dy to make sure we don't go outside of the image:
-      for(var i = 0; i < this.x.length; i++) {
+              for(var i = 0; i < this.x.length; i++) {
         dx = Math.max(this.x[i]+dx,1)-this.x[i];
         dy = Math.max(this.y[i]+dy,1)-this.y[i];
         dx = Math.min(this.x[i]+dx,main_media.width_orig)-this.x[i];
         dy = Math.min(this.y[i]+dy,main_media.height_orig)-this.y[i];
       }
-      // Adjust polygon and center point:
-      for(var i = 0; i < this.x.length; i++) {
+              for(var i = 0; i < this.x.length; i++) {
         this.x[i] = Math.round(this.x[i]+dx);
         this.y[i] = Math.round(this.y[i]+dy);
       }
       this.center_x = Math.round(this.scale*(dx+this.center_x));
       this.center_y = Math.round(this.scale*(dy+this.center_y));
       
-      // Remove polygon and redraw:
-      //if ($('#'+this.polygon_id).is('image')) $('#'+this.polygon_id).remove();
-      $('#'+this.polygon_id).parent().remove();
+                      $('#'+this.polygon_id).parent().remove();
       this.polygon_id = this.DrawPolygon(this.dom_attach,this.x,this.y,this.obj_name,this.scale);
       select_anno.polygon_id = this.polygon_id;
 
-      // Redraw center of mass:
-      this.RemoveCenterOfMass();
+              this.RemoveCenterOfMass();
       this.ShowCenterOfMass();
     }
   };
@@ -440,11 +390,9 @@ function AdjustEvent(dom_attach,x,y,obj_name,ExitFunction,scale, bounding_box_an
    */
   this.StopMoveCenterOfMass = function(event) {
     if(this.isMovingCenterOfMass) {
-      // Move to final position:
-      this.MoveCenterOfMass(event);
+              this.MoveCenterOfMass(event);
       
-      // Refresh control points:
-      if (this.bounding_box){
+              if (this.bounding_box){
         this.RemoveScalingPoints();
         this.RemoveCenterOfMass();
         this.ShowScalingPoints();
@@ -460,8 +408,7 @@ function AdjustEvent(dom_attach,x,y,obj_name,ExitFunction,scale, bounding_box_an
       FillPolygon(this.polygon_id);
       this.isMovingCenterOfMass = false;
       if (video_mode) main_media.UpdateObjectPosition(select_anno, this.x, this.y);
-      // Set action:
-      $('#'+this.dom_attach).unbind();
+              $('#'+this.dom_attach).unbind();
       $('#'+this.dom_attach).mousedown({obj: this},function(e) {
         return e.data.obj.StopAdjustEvent();
       });
@@ -469,7 +416,7 @@ function AdjustEvent(dom_attach,x,y,obj_name,ExitFunction,scale, bounding_box_an
     }
   };
 
-  /*************** Helper functions ****************/
+  
 
   /** Compute center of mass for a polygon given array of points (x,y):
 
@@ -477,15 +424,12 @@ function AdjustEvent(dom_attach,x,y,obj_name,ExitFunction,scale, bounding_box_an
   this.CenterOfMass = function(x,y) {
     var N = x.length;
     
-    // Center of mass for a single point:
-    if(N==1) {
+          if(N==1) {
       this.center_x = x[0];
       this.center_y = y[0];
       return;
     }
-    // The center of mass is the average polygon edge midpoint weighted by 
-    // edge length:
-    this.center_x = 0; this.center_y = 0;
+                this.center_x = 0; this.center_y = 0;
     var perimeter = 0;
     for(var i = 1; i <= N; i++) {
       var length = Math.round(Math.sqrt(Math.pow(x[i-1]-x[i%N], 2) + Math.pow(y[i-1]-y[i%N], 2)));

@@ -1,53 +1,53 @@
-/** @file Contains the global variables used in LabelMe. */
+/**@file包含LabelMe中使用的全局变量。*/
 
-// Parsed LabelMe XML file. Manipulate this variable with jquery.
+//解析后的LabelMe XML文件使用jQuery操作此变量。
 var LM_xml;
 
-// URL of CGI script to submit XML annotation:
+//提交XML批注的CGI脚本URL：
 var SubmitXmlUrl = 'annotationTools/perl/submit.cgi';
 
-// LabelMe username:
+//LabelMe用户名：
 var username = 'anonymous';
 
-// Boolean indicating whether user is currently signing in (this should be abstracted into class):
+//指示用户当前是否正在登录的布尔值(应该抽象到类中)：
 var username_flag = 0;
 
-// Boolean indicating if we will use attributes. This should be read from the URL and set to 0 by default.
-var use_attributes = 1; // if this is 0, then it will remove all the attributes from the bubble.
-var use_parts = 1; // if this is 0 disapears the message from the bubble
+//指示我们是否将使用属性的布尔值。它应该从URL中读取，默认情况下设置为0。
+var use_attributes = 1; //如果为0，则从泡沫中移除所有属性
+var use_parts = 1; //如果为0，则从泡沫中消失消息
 
-// for now, let's remove the attributes in MT mode. Just in case anybody is trying this.
+//现在，让我们先移除MT模式下的属性。以防有人尝试这个。
 if (getQueryVariable('mode')=='mt'){
     //use_attributes=0;
     //use_parts = 0;
 }
 
-// Boolean indicating whether the control points were edited:
+//指示是否编辑控制点的布尔值：
 var editedControlPoints = 0;
 
-// Scalar indicating which polygon is selected; -1 means no polygon is selected
+//标量，表示选择哪个多边形，-1表示不选择多边形
 var selected_poly = -1;
 
-// Class with functions to handle actions/events.
+//具有处理操作/事件的函数的类。
 var main_handler;
 
-// Canvas that renders polygons at rest state.
+//在睡觉状态渲染多边形的画布。
 var main_canvas;
 
-// Holds image.
+//保存镜像。
 var main_media;
 
-// URL of XHTML namespace. This is needed for generating SVG elements.
+//XHTML命名空间的URL这是生成SVG元素所需的。
 var xhtmlNS = 'http://www.w3.org/1999/xhtml';
 
-// Website that refers to LabelMe:
+//引用LabelMe的网站：
 var ref;
 
-// Indicates whether we are in segmentation or polygon mode
+//指示我们是处于分段模式还是多边形模式
 var drawing_mode = 0;
 var showImgName = false;
 
-// Scribble mode:
+//Scribble模式：
 var scribble_mode = true;
 var threed_mode = false;
 var video_mode = false;
@@ -62,23 +62,22 @@ var num_orig_anno;
 var global_count = 0;
 var req_submit;
 
-// Indicates if polygon has been edited.
+//指示多边形是否已编辑。
 var submission_edited = 0;
 
-// Allowable user actions:
+//允许的用户操作：
 var action_CreatePolygon = 1;
 var action_RenameExistingObjects = 0;
 var action_ModifyControlExistingObjects = 0;
 var action_DeleteExistingObjects = 0;
 
-// Which polygons are visible:
+//哪些多边形可见：
 var view_Existing = 1;
 var view_Deleted = 0;
 
-// Flag for right-hand object list:
+//右侧对象列表标志：
 var view_ObjList = true;
 
-// Mechanical Turk variables:
 var LMbaseurl = 'http://' + window.location.host + window.location.pathname;
 var MThelpPage = 'annotationTools/html/mt_instructions.html';
 var externalSubmitURL = 'https://www.mturk.com/mturk/externalSubmit';

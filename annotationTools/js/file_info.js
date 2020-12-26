@@ -1,36 +1,18 @@
-/** @file Contains the file_info class, which parses the URL and
- * sets global variables based on the URL.  */
-
-// file_info class - only works for still images at the moment
-
-/**
- * Keeps track of the information for the currently displayed image
- * and fetches the information via dirlists or from the URL.
- * @constructor
-*/
+/**@file包含FILE_INFO类，它解析URL和*根据URL设置全局变量。*/
 function file_info() {
-    
-    // *******************************************
-    // Private variables:
-    // *******************************************
-    
-    this.page_in_use = 0; // Describes if we already see an image.
+    this.page_in_use = 0; 
     this.dir_name = null;
     this.im_name = null;
     this.collection = 'LabelMe';
-    this.mode = 'i'; //initialize to picture mode
+    this.mode = 'i'; 
     this.hitId = null;
     this.assignmentId = null;
     this.workerId = null;
     this.mt_instructions = null;
     
-    // *******************************************
-    // Public methods:
-    // *******************************************
-    
-    /** Parses the URL and gets the collection, directory, and filename
-     * information of the image to be annotated.  Returns true if the
-     * URL has collection, directory, and filename information.
+    /**解析URL并获取集合、目录和文件名
+    *要注释的图像的信息。如果满足以下条件，则返回TRUE
+    *URL包含集合、目录和文件名信息。
     */
     this.ParseURL = function () {
         var labelme_url = document.URL;
@@ -38,7 +20,7 @@ function file_info() {
         if((idx != -1) && (this.page_in_use == 0)) {
             this.page_in_use = 1;
             var par_str = labelme_url.substring(idx+1,labelme_url.length);
-            var isMT = false; // In MT mode?
+            var isMT = false; 
             var default_view_ObjList = false;
             do {
                 idx = par_str.indexOf('&');
@@ -104,7 +86,7 @@ function file_info() {
                     this.workerId = par_value;
                     isMT = true;
                     
-                    // Get second-half of workerId:
+                    
                     var len = Math.round(this.workerId.length/2);
                     username = 'MT_' + this.workerId.substring(len-1,this.workerId.length);
                 }
@@ -112,7 +94,7 @@ function file_info() {
                     MThelpPage = par_value;
                 }
                 if(par_field=='actions') {
-                    // Get allowable actions:
+                    
                     var actions = par_value;
                     action_CreatePolygon = 0;
                     action_RenameExistingObjects = 0;
@@ -136,7 +118,7 @@ function file_info() {
                     }
                 }
                 if(par_field=='viewobj') {
-                    // Get option for which polygons to see:
+                    
                     var viewobj = par_value;
                     view_Existing = 0;
                     view_Deleted = 0;
@@ -158,12 +140,12 @@ function file_info() {
                     }
                 }
                 if(par_field=='mt_instructions') {
-                    // One line MT instructions:
+                    
                     this.mt_instructions = par_value;
                     this.mt_instructions = this.mt_instructions.replace(/_/g,' ');
                 }
                 if(par_field=='objects') {
-                    // Set drop-down list of object to label:
+                    
                     object_choices = par_value.replace('_',' ');
                     object_choices = object_choices.split(/,/);
                 }
@@ -197,7 +179,7 @@ function file_info() {
             if((!this.dir_name) || (!this.im_name)) return this.SetURL(labelme_url);
             
             if(isMT) {
-                this.mode='mt'; // Ensure that we are in MT mode
+                this.mode='mt'; 
                 view_ObjList = default_view_ObjList;
             }
             
@@ -249,83 +231,71 @@ function file_info() {
         
         return 1;
     };
-    
-    /** Gets mode */
     this.GetMode = function() {
         return this.mode;
     };
     
-    /** Gets collection name */
+    
     this.GetCollection = function () {
         return this.collection;
     };
     
-    /** Gets directory name */
+    
     this.GetDirName = function () {
         return this.dir_name;
     };
     
-    /** Gets image name */
+    
     this.GetImName = function () {
         return this.im_name;
     };
     
-    /** Sets image name */
+    
     this.SetImName = function (newImName){
         this.im_name = newImName;
     };
     
-    /** Gets image path */
+    
     this.GetImagePath = function () {
         if((this.mode=='i') || (this.mode=='c') || (this.mode=='f') || (this.mode=='im') || (this.mode=='mt')) return 'Images/' + this.dir_name + '/' + this.im_name;
     };
     
-    /** Gets annotation path */
+    
     this.GetAnnotationPath = function () {
         if((this.mode=='i') || (this.mode=='c') || (this.mode=='f') || (this.mode=='im') || (this.mode=='mt')) return 'Annotations/' + this.dir_name + '/' + this.im_name.substr(0,this.im_name.length-4) + '.xml';
     };
     
-    /** Gets full image name */
+    
     this.GetFullName = function () {
         if((this.mode=='i') || (this.mode=='c') || (this.mode=='f') || (this.mode=='im') || (this.mode=='mt')) return this.dir_name + '/' + this.im_name;
     };
     
-    /** Gets template path */
+    
     this.GetTemplatePath = function () {
         if(!this.dir_name) return 'annotationCache/XMLTemplates/labelme.xml';
         return 'annotationCache/XMLTemplates/' + this.dir_name + '.xml';
     };
     
-    // *******************************************
-    // Private methods:
-    // *******************************************
-    
-    /** String is assumed to have field=value form.  Parses string to
-    return the field. */
+    /**字符串假定为field=value形式。将字符串解析为返回字段。*/
     this.GetURLField = function (str) {
         var idx = str.indexOf('=');
         return str.substring(0,idx);
     };
     
-    /** String is assumed to have field=value form.  Parses string to
-     return the value. */
+    /**字符串假定为field=value形式。将字符串解析为返回值。*/
     this.GetURLValue = function (str) {
         var idx = str.indexOf('=');
         return str.substring(idx+1,str.length);
     };
     
-    /** Changes current URL to include collection, directory, and image
-    name information.  Returns false. */
+    /**更改当前URL以包含集合、目录和图像姓名信息。返回False。*/
     this.SetURL = function (url) {
         this.FetchImage();
 
-	// Get base LabelMe URL:
         var idx = url.indexOf('?');
         if(idx != -1) {
             url = url.substring(0,idx);
         }
-        
-        // Include username in URL:
         var extra_field = '';
         if(username != 'anonymous') extra_field = '&username=' + username;
         
@@ -337,11 +307,11 @@ function file_info() {
         return false;
     };
     
-    /** Fetch next image. */
+    
     this.FetchImage = function () {
         var url = 'annotationTools/perl/fetch_image.cgi?mode=' + this.mode + '&username=' + username + '&collection=' + this.collection.toLowerCase() + '&folder=' + this.dir_name + '&image=' + this.im_name;
         var im_req;
-        // branch for native XMLHttpRequest object
+        
         if (window.XMLHttpRequest) {
             im_req = new XMLHttpRequest();
             im_req.open("GET", url, false);
@@ -358,7 +328,7 @@ function file_info() {
             this.dir_name = im_req.responseXML.getElementsByTagName("dir")[0].firstChild.nodeValue;
             this.im_name = im_req.responseXML.getElementsByTagName("file")[0].firstChild.nodeValue;
             imgName = this.im_name;
-            // 更新显示图片名称
+            
             $("#current_img_url").text(this.im_name);
         }
         else {
@@ -371,7 +341,7 @@ function file_info() {
 		}
         var url = 'annotationTools/perl/fetch_prev_image.cgi?mode=' + this.mode + '&username=' + username + '&collection=' + this.collection.toLowerCase() + '&folder=' + this.dir_name + '&image=' + this.im_name;
         var im_req;
-        // branch for native XMLHttpRequest object
+        
         if (window.XMLHttpRequest) {
             im_req = new XMLHttpRequest();
             im_req.open("GET", url, false);

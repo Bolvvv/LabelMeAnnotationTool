@@ -1,15 +1,7 @@
-/** @file This file contains functions for detecting and interacting with the different browser types. */
-
 var bname;
 var bversion;
 
 function GetBrowserInfo() {
-//   alert(navigator.appCodeName);
-//   alert(navigator.appName);
-//   alert(navigator.appVersion);
-//   alert(navigator.cookieEnabled);
-//   alert(navigator.platform);
-//   alert(navigator.userAgent);
   WriteLogMsg('*Browser_Information ' + navigator.userAgent);
 
   bname = navigator.appName;
@@ -19,7 +11,6 @@ function GetBrowserInfo() {
   }
   else if(IsNetscape() || IsSafari()) {
     bversion = parseInt(navigator.appVersion);
-    //check for Safari.  
     if(navigator.userAgent.match('Safari')) bname = 'Safari';
   }
   else bversion = 0;
@@ -61,11 +52,6 @@ function setCookie(c_name,value,expiredays) {
     ((expiredays==null) ? "" : "; expires="+exdate);
 }
 
-/** This function gets a variable from the URL (or the COOKIES)
- * @example: 
- * // returns the username
- * var username = getQueryVariable("username");
- */
 function getQueryVariable(variable) {
     var query = window.location.search.substring(1);
     var vars = query.split("&");

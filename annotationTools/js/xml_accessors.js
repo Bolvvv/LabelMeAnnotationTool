@@ -1,11 +1,10 @@
-/** @file This file contains functions for reading attributes of an xml. 
-*/
+/**@file此文件包含读取XML属性的函数。*/
 
-/** Gets a field for an object from an xml. If frame value is provided, it gives the field at the given.
-  * @param {string} xml - The xml containing the annotations
-  * @param {int} ind_object - Index to the object to be displayed
-  * @param {string} name - name of the field to return.
-  * @param {int} frame - frame of interest
+/**从XML获取对象的字段。如果提供了帧值，它将在给定位置提供字段。
+*@param{string}xml-包含批注的XML
+*@param{int}ind_object-要显示的对象的索引
+*@param{string}name-要返回的字段的名称。
+*@param{int}Frame-感兴趣的帧
 */
 function LMgetObjectField(xml,ind_object, name, frame) {
 	var obj = $(xml).children("annotation").children("object").eq(ind_object);
@@ -109,11 +108,11 @@ function LMnumberOfObjects(xml) {
     return xml.getElementsByTagName('object').length;
 }
 
-/** Sets a field for an object from an xml. 
-  * @param {string} xml - The xml containing the annotations
-  * @param {int} ind_object - Index to the object to be set
-  * @param {string} name - name of the field to set.
-  * @param {string} value - value to which the object will be set
+/**为XML中的对象设置字段。
+*@param{string}xml-包含批注的XML
+*@param{int}ind_object-要设置的对象的索引
+*@param{string}name-要设置的字段的名称。
+*@param{string}value-对象将设置的值
 */
 function LMsetObjectField(xml, ind_object, name, value){
 	var obj = $(xml).children("annotation").children("object").eq(ind_object);

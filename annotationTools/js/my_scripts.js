@@ -1,13 +1,13 @@
-// This file should be minimized and abstracted whenever possible.  
-// It is best to refrain from adding new variables/functions to this file.
+//尽可能将该文件最小化和抽象化。
+//最好不要向该文件添加新的变量/函数。
 
-// Get the x position of the mouse event.
+//获取鼠标事件的x位置
 function GetEventPosX(event) {
   if(IsNetscape()) return event.layerX;
   return event.offsetX;
 }
 
-// Get the y position of the mouse event.
+//获取鼠标事件的y位置
 function GetEventPosY(event) {
   if(IsNetscape()) return event.layerY;
   return event.offsetY;
@@ -28,7 +28,7 @@ function WaitForInput() {
   alert("Need to enter object name.");
 }
 
-// Return true if the username is "anonymous".
+//如果用户名为“匿名”，则返回true。
 function IsUserAnonymous() {
   return (username=='anonymous');
 }
@@ -53,7 +53,7 @@ function IsCreator(u) {
 function WriteLogMsg(msg) {
   var url = 'annotationTools/perl/write_logfile.cgi';
   var req_submit;
-  // branch for native XMLHttpRequest object
+  //原生XMLHttpRequest对象分支
   if (window.XMLHttpRequest) {
     req_submit = new XMLHttpRequest();
     req_submit.open("POST", url, true);
@@ -68,19 +68,15 @@ function WriteLogMsg(msg) {
   }
 }
 
-// This function gets called when the user clicks on the "Next image" button.
+//当用户点击“下一张图片”按钮时，会调用该函数。
 function ShowPrevImage() {
   if(wait_for_input) return WaitForInput();
   if(draw_anno) {
     alert("Need to close current polygon first.");
     return;
   }
-  //$('#main_media').remove();
 
-  // Remove the object list:
   RemoveObjectList();
-
-  // Get a new image and reset URL to reflect new image:
   if (video_mode) main_media.GetFileInfo().SetURL(document.URL);
   else {
     main_media.GetFileInfo().FetchPrevImage();
@@ -93,12 +89,12 @@ function ShowNextImage() {
     alert("Need to close current polygon first.");
     return;
   }
-  //$('#main_media').remove();
+  
 
-  // Remove the object list:
+  
   RemoveObjectList();
 
-  // Get a new image and reset URL to reflect new image:
+  
   if (video_mode) main_media.GetFileInfo().SetURL(document.URL);
   else {
     main_media.GetFileInfo().FetchImage();
@@ -113,7 +109,7 @@ function InsertServerLogData(modifiedControlPoints) {
   }
   var video_mode_num = 0;
   if (video_mode) video_mode_num = 1;
-  // Add information to go into the log:
+  
   var elt_pri = LM_xml.createElement("private");
   var elt_gct = LM_xml.createElement("global_count");
   var elt_user = LM_xml.createElement("pri_username");
@@ -163,7 +159,7 @@ function PermissionError() {
 
 function GetTimeStamp() {
   var url = 'annotationTools/perl/get_timestamp.cgi';
-  // branch for native XMLHttpRequest object
+  
   if (window.XMLHttpRequest) {
     req_anno = new XMLHttpRequest();
     req_anno.open("POST", url, false);
@@ -182,19 +178,14 @@ function GetTimeStamp() {
 }
 
 
-// Set object list choices for points and lines:
+
 function SetObjectChoicesPointLine(num_control_points) {
-  // If point has been labeled, then make autocomplete have "point"
-  // be option:
   var isPoint = 0;
   if((num_control_points==1) && (object_choices=='...')) {
     object_choices = 'point';
     object_choices = object_choices.split(/,/);
     isPoint = 1;
   }
-  
-  // If line has been labeled, then make autocomplete have "line"
-  // and "horizon line" be options:
   var isLine = 0;
   if((num_control_points==2) && (object_choices=='...')) {
     object_choices = 'line,horizon line';
@@ -205,7 +196,7 @@ function SetObjectChoicesPointLine(num_control_points) {
   return (isPoint || isLine);
 }
 
-// Returns true if the point (x,y) is close to polygon p.
+//如果点(x，y)接近多边形p，则返回TRUE。
 function IsNearPolygon(x,y,p) {
   var sx = x / main_media.GetImRatio();
   var sy = y / main_media.GetImRatio();
@@ -214,18 +205,16 @@ function IsNearPolygon(x,y,p) {
   var pt = main_canvas.annotations[anid].ClosestPoint(sx,sy);
   var minDist = pt[2];
   
-  // This is the sensitivity area around the outline of the polygon.
-  // Also, when you move the mouse over the sensitivity area, the area 
-  // gets bigger so you won't move off of it on accident.
+  //这是多边形轮廓周围的敏感区
+  //另外，当您将鼠标移到敏感区上时，该区域
+  //变得更大，这样你就不会意外地离开它。
   var buffer = 5;
   if(selected_poly != -1) buffer = 13;
   
-  // Note: need to multiply by im_ratio so that the sensitivity area 
-  // is not huge when you're zoomed in. 
+  //注意：需要乘以im_ratio，这样敏感区在放大时并不大。
   return ((minDist*main_media.GetImRatio()) < buffer);
 }
     
-// Render filled polygons for selected objects:
 function selectObject(idx) {
   var anid = main_canvas.GetAnnoIndex(idx);
   if(selected_poly==idx) return;
@@ -234,7 +223,6 @@ function selectObject(idx) {
   if(view_ObjList) ChangeLinkColorFG(idx);
   main_canvas.annotations[anid].FillPolygon();
   
-  // Select object parts:
   var selected_poly_parts = getPartChildrens(idx);
   for (var i=0; i<selected_poly_parts.length; i++) {
     var anid = main_canvas.GetAnnoIndex(selected_poly_parts[i]);
@@ -246,7 +234,7 @@ function selectObject(idx) {
   }
 }
 
-// Stop fill polygon rendering for selected objects:
+//停止所选对象的填充多边形渲染：
 function unselectObjects() {
   if(selected_poly == -1) return;
   var anid;
@@ -255,7 +243,7 @@ function unselectObjects() {
   if(view_ObjList) ChangeLinkColorBG(selected_poly);
   main_canvas.annotations[anid].UnfillPolygon();
   
-  // Unselect object parts:
+  //取消选择对象部件：
   var selected_poly_parts = getPartChildrens(selected_poly);
   for (var i=0; i<selected_poly_parts.length; i++) {
 
@@ -268,11 +256,10 @@ function unselectObjects() {
     
   }
   
-  // Reset selected_poly variable:
+  //重置SELECTED_POLY变量：
   selected_poly = -1;
 }
 
-// Deletes the currently selected polygon from the canvas.
 function DeleteSelectedPolygon() {
   if(selected_poly == -1) return;
   
@@ -290,32 +277,25 @@ function DeleteSelectedPolygon() {
   old_name = LMgetObjectField(LM_xml,main_canvas.annotations[selected_poly].anno_id,'name');
   new_name = old_name;
   
-  // Write to logfile:
+  //写入日志文件：
   WriteLogMsg('*Deleting_object');
   InsertServerLogData('cpts_not_modified');
   
-  // Set <deleted> in LM_xml:
+  //在LM_XML中设置<Delete>：
   $(LM_xml).children("annotation").children("object").eq(selected_poly).children("deleted").text('1');
   
-  // Write XML to server:
+  //将XML写入服务器：
   WriteXML(SubmitXmlUrl,LM_xml,function(){return;});
-  
-  //     SubmitAnnotations(0);
-  
-  // Need to keep track of the selected polygon since it gets reset
-  // in the next step:
   var ndx = selected_poly;
   
-  // Unselect the object:
   unselectObjects();
   if(view_ObjList) RenderObjectList();
   
-  // Delete the polygon from the canvas:
+  //从画布中删除多边形：
   main_canvas.annotations[ndx].DeletePolygon();
 }
 
 
-// UTILITIES    
 function CheckXMLExists() {
   if(req_submit.readyState==4) {
     if(req_submit.status != 200) {
@@ -329,8 +309,6 @@ function CheckXMLExists() {
 
 function GetXMLFile() {
   var xml_url = main_media.GetFileInfo().GetAnnotationPath();
-
-  // Check if VRML file exists:
   if (window.XMLHttpRequest) {
     req_submit = new XMLHttpRequest();
     req_submit.onreadystatechange = CheckXMLExists;
