@@ -292,8 +292,7 @@ function Scribble_canvas(tag) {
     }
   }
 
-  //根据编辑的
-  //分段。它会更新封闭的面的边界包含分段。
+  //根据编辑的分段。它会更新封闭的面的边界包含分段。
   this.UpdateMaskXML = function (idx){
     $(LM_xml).children("annotation").children("object").eq(idx).children("segm").children("scribbles").children("xmin").text(scribble_canvas.image_corners[0]);
     $(LM_xml).children("annotation").children("object").eq(idx).children("segm").children("scribbles").children("ymin").text(scribble_canvas.image_corners[1]);
@@ -487,7 +486,7 @@ function Scribble_canvas(tag) {
     return [res,corners];
 
   }
-  // Draw the segmentation mask into the canvas, clearing previous masks from the canvas if there were any
+  //将分段蒙版绘制到画布中，如果有以前的蒙版，则将其从画布中清除
   this.drawMask = function(){
     ClearMask('mask_canvas');
     if (saveCanvas == null) return;

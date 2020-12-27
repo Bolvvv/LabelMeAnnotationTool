@@ -184,10 +184,10 @@ function AdjustEvent(dom_attach,x,y,obj_name,ExitFunction,scale, bounding_box_an
   };
   
 
-  /** This function is called when one scaling point is clicked
-   * It prepares the polygon for scaling.
-   * @param {int} i - the index of the scaling point being modified
-  */
+/**点击一个缩放点时调用该函数
+*它为缩放多边形做好准备。
+*@param{int}i-修改的缩放点索引
+*/
   this.StartMoveScalingPoint = function(i) {
     if(!this.isEditingScalingPoint) {
       $('#'+this.dom_attach).unbind();

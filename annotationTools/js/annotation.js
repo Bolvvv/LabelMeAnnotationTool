@@ -1,6 +1,3 @@
-
-
-
 function annotation(anno_id) {
     this.anno_id = anno_id;
     this.div_attach = 'myCanvas_bg';

@@ -1,7 +1,6 @@
 //这里是在Labelme工具右侧构建对象列表的所有代码。
 //此工具的样式定义在：注解工具/css/object_list.css中
 
-
 var IsHidingAllPolygons = false;
 var ListOffSet = 0;
 
